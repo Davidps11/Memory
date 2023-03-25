@@ -6,7 +6,7 @@ Exercises:
 2. Decrease the number of tiles to a 4x4 grid.
 3. Detect when all tiles are revealed.
 4. Center single-digit tile.
-5. Use letters instead of tiles.
+5. Use letters instead of tiles.  
 """
 
 from random import *
@@ -18,14 +18,14 @@ car = path('car.gif')
 tiles = list(range(32)) * 2
 state = {'mark': None}
 hide = [True] * 64
-taps = 0 
+taps = 0 #inicializamos el juego con 0 taps 
 
 def square(x, y):
     """Draw white square with black outline at (x, y)."""
     up()
     goto(x, y)
     down()
-    color('black', 'white')
+    color('black', 'yellow') #cambiamos colo de los cuadros 
     begin_fill()
     for count in range(4):
         forward(50)
@@ -45,8 +45,10 @@ def xy(count):
 
 def tap(x, y):
     """Update mark and hidden tiles based on tap."""
+    global taps #regresa el indice de casilla en la que se hizo click 
     spot = index(x, y)
     mark = state['mark']
+    taps = taps + 1
 
     if mark is None or mark == spot or tiles[mark] != tiles[spot]:
         state['mark'] = spot
@@ -73,9 +75,24 @@ def draw():
     if mark is not None and hide[mark]:
         x, y = xy(mark)
         up()
-        goto(x + 2, y)
+        goto(x + 10, y+2) #mueve el turtle a la posición x+2,y
         color('black')
         write(tiles[mark], font=('Arial', 30, 'normal'))
+
+    faltantes = hide.count(True) 
+
+    if faltantes == 0:
+        up()
+        goto(-185, 120)
+        color('green') 
+        write('Has ganado un auto nuevo!!',font=('Arial', 20, 'normal'))
+        goto(-120, 80)
+        color('white')
+        write(f'Numero de taps: {taps}', font=('Arial', 16, 'normal'))
+        up()
+        goto(-150, -150)
+        color('white')
+        
 
     update()
     ontimer(draw, 100)
